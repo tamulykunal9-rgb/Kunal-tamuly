@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SmashZone — Badminton Hub</title>
+
+  <style>
+    /* =========================
+       RESET & GLOBAL
+    ========================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #07110d;
+      color: #f5fff9;
+      line-height: 1.6;
+      transition: 0.3s ease;
+    }
+
+    body.light {
+      background: #f4f8f6;
+      color: #102018;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1150px, 92%);
+      margin: auto;
+    }
+
+    /* =========================
+       NAVBAR
+    ========================== */
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 17, 13, 0.78);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    body.light header {
+      background: rgba(255,255,255,0.82);
+      border-bottom: 1px solid #dce8e1;
+    }
+
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: #8cff4f;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 600;
+      opacity: .8;
+      transition: .25s;
+    }
+
+    .nav-links a:hover {
+      color: #8cff4f;
+      opacity: 1;
+    }
+
+    .theme-btn,
+    .menu-btn {
+      border: 0;
+      background: rgba(255,255,255,.08);
+      color: inherit;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+    }
+
+    .menu-btn {
+      display: none;
+    }
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: #6cff38;
+      filter: blur(150px);
+      opacity: .12;
+      right: -150px;
+      top: 100px;
+    }
+
+    .hero-content {
+      max-width: 760px;
+      animation: fadeUp .9s ease;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 13px;
+      border: 1px solid rgba(140,255,79,.35);
+      border-radius: 50px;
+      color: #8cff4f;
+      background: rgba(140,255,79,.08);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(45px, 8vw, 85px);
+      line-height: .95;
+      letter-spacing: -5px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 span {
+      color: #8cff4f;
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: #aabbb1;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    body.light .hero p {
+      color: #53655b;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: .25s;
+    }
+
+    .btn-primary {
+      background: #8cff4f;
+      color: #081108;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(140,255,79,.2);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.08);
+      color: inherit;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,.14);
+    }
+
+    /* =========================
+       SECTIONS
+    ========================== */
+
+    section {
+      padding: 90px 0;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 35px;
+      gap: 20px;
+    }
+
+    .section-title h2 {
+      font-size: 35px;
+      letter-spacing: -1px;
+    }
+
+    .section-title p {
+      color: #8da097;
+      font-size: 14px;
+    }
+
+    body.light .section-title p {
+      color: #687a71;
+    }
+
+    /* =========================
+       LIVE SCORE
+    ========================== */
+
+    .live-card {
+      background: linear-gradient(135deg, #10251a, #0b1711);
+      border: 1px solid rgba(140,255,79,.18);
+      border-radius: 24px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 25px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.2);
+    }
+
+    body.light .live-card {
+      background: white;
+      border-color: #dbe8df;
+    }
+
+    .player {
+      text-align: center;
+    }
+
+    .avatar {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: auto auto 10px;
+      background: #1c3528;
+      font-size: 28px;
+    }
+
+    body.light .avatar {
+      background: #e5f1e9;
+    }
+
+    .player h3 {
+      font-size: 17px;
+    }
+
+    .player small {
+      color: #8da097;
+    }
+
+    .score {
+      text-align: center;
+    }
+
+    .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #ff5757;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff5757;
+      animation: pulse 1s infinite;
+    }
+
+    .score-number {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -3px;
+    }
+
+    .vs {
+      color: #71847a;
+      margin: 0 10px;
+    }
+
+    /* =========================
+       CARDS
+    ========================== */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: #0d1b14;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 18px;
+      padding: 22px;
+      transition: .3s;
+    }
+
+    body.light .card {
+      background: white;
+      border-color: #dce8e1;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(140,255,79,.3);
+    }
+
+    /* =========================
+       RANKINGS
+    ========================== */
+
+    .ranking-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    body.light .ranking-row {
+      border-color: #e5ece8;
+    }
+
+    .rank {
+      width: 30px;
+      font-weight: 800;
+      color: #8cff4f;
+    }
+
+    .rank-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #20382b;
+    }
+
+    body.light .rank-avatar {
+      background: #e3f0e8;
+    }
+
+    .rank-info {
+      flex: 1;
+    }
+
+    .rank-info strong {
+      display: block;
+    }
+
+    .rank-info small {
+      color: #82958b;
+    }
+
+    .points {
+      font-weight: 800;
+    }
+
+    /* =========================
+       MATCHES
+    ========================== */
+
+    .match-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .match-date {
+      color: #8cff4f;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .match-teams {
+      font-weight: 700;
+    }
+
+    .match-teams div {
+      margin: 4px 0;
+    }
+
+    .match-time {
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .match-time small {
+      display: block;
+      color: #82958b;
+      font-weight: normal;
+    }
+
+    /* =========================
+       NEWS
+    ========================== */
+
+    .news-image {
+      height: 150px;
+      border-radius: 13px;
+      margin-bottom: 17px;
+      display: grid;
+      place-items: center;
+      font-size: 55px;
+      background: linear-gradient(135deg,#173a26,#0c1912);
+    }
+
+    body.light .news-image {
+      background: linear-gradient(135deg,#e2f3e8,#f5faf7);
+    }
+
+    .news-tag {
+      color: #8cff4f;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .news-card h3 {
+      margin: 6px 0;
+    }
+
+    .news-card p {
+      color: #879990;
+      font-size: 14px;
+    }
+
+    /* =========================
+       TOURNAMENTS
+    ========================== */
+
+    .tournament-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tournament-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .tournament-card h3 {
+      margin-bottom: 6px;
+    }
+
+    .tournament-card p {
+      color: #879990;
+      font-size: 14px;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 5px 10px;
+      border-radius: 50px;
+      background: rgba(140,255,79,.1);
+      color: #8cff4f;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      padding: 45px 0;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: #809189;
+    }
+
+    body.light footer {
+      border-color: #dce8e1;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* =========================
+       ANIMATIONS
+    ========================== */
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      50% {
+        transform: scale(1.5);
+        opacity: .5;
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: .7s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================
+       MOBILE
+    ========================== */
+
+    @media (max-width: 850px) {
+
+      .nav-links {
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: #08120d;
+        padding: 20px;
+        flex-direction: column;
+        display: none;
+      }
+
+      body.light .nav-links {
+        background: white;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .live-card {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        letter-spacing: -3px;
+      }
+    }
+
+    @media (max-width: 500px) {
+
+      section {
+        padding: 65px 0;
+      }
+
+      .hero {
+        min-height: 90vh;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .section-title h2 {
+        font-size: 28px;
+      }
+
+      .live-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <header>
+    <div class="container nav">
+
+      <a href="#home" class="logo">
+        SMASH<span>ZONE</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#rankings">Rankings</a></li>
+        <li><a href="#matches">Matches</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#tournaments">Tournaments</a></li>
+      </ul>
+
+      <div style="display:flex;gap:8px;">
+        <button class="theme-btn" id="themeBtn">🌙</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <main>
+
+    <section class="hero" id="home">
+
+      <div class="container">
+
+        <div class="hero-content">
+
+          <span class="badge">🏸 THE BADMINTON HUB</span>
+
+          <h1>
+            PLAY HARD.<br>
+            <span>SMASH</span> HARDER.
+          </h1>
+
+          <p>
+            Follow the world of badminton — rankings, live scores,
+            upcoming matches, tournaments and the latest news.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#matches" class="btn btn-primary">
+              View Matches →
+            </a>
+
+            <a href="#rankings" class="btn btn-secondary">
+              Rankings
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         LIVE SCORE
+    ========================== -->
+
+    <section id="live">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+          <div>
+            <h2>Live Score</h2>
+            <p>Follow the action right now</p>
+          </div>
+        </div>
+
+        <div class="live-card reveal">
+
+          <div class="player">
+            <div class="avatar">👨🏻</div>
+            <h3>Arjun Mehta</h3>
+            <small>India</small>
+          </div>
+
+          <div class="score">
+
+            <div class="live">
+              <span class="live-dot"></span>
+              LIVE
+            </div>
+
+            <div class="score-number">
+              18 <span class="vs">–</span> 16
+            </div>
+
+            <small>Game 2</small>
+
+          </div>
+
+          <div class="player">
+            <div class="avatar">👨🏻</div>
+            <h3>Daniel Lee</h3>
+            <small>Malaysia</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RANKINGS
+    ========================== -->
+
+    <section id="rankings">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+          <div>
+            <h2>World Rankings</h2>
+            <p>Top men's singles players</p>
+          </div>
+        </div>
+
+        <div class="card reveal">
+
+          <div class="ranking-row">
+            <span class="rank">01</span>
+            <div class="rank-avatar">🏸</div>
+            <div class="rank-info">
+              <strong>Alex Carter</strong>
+              <small>🇩🇰 Denmark</small>
+            </div>
+            <span class="points">98,420</span>
+          </div>
+
+          <div class="ranking-row">
+            <span class="rank">02</span>
+            <div class="rank-avatar">🏸</div>
+            <div class="rank-info">
+              <strong>Ryan Kumar</strong>
+              <small>🇮🇳 India</small>
+            </div>
+            <span class="points">96,180</span>
+          </div>
+
+          <div class="ranking-row">
+            <span class="rank">03</span>
+            <div class="rank-avatar">🏸</div>
+            <div class="rank-info">
+              <strong>Kenji Sato</strong>
+              <small>🇯🇵 Japan</small>
+            </div>
+            <span class="points">93,850</span>
+          </div>
+
+          <div class="ranking-row">
+            <span class="rank">04</span>
+            <div class="rank-avatar">🏸</div>
+            <div class="rank-info">
+              <strong>Lucas Martin</strong>
+              <small>🇫🇷 France</small>
+            </div>
+            <span class="points">91,400</span>
+          </div>
+
+          <div class="ranking-row">
+            <span class="rank">05</span>
+            <div class="rank-avatar">🏸</div>
+            <div class="rank-info">
+              <strong>Min-Jun Park</strong>
+              <small>🇰🇷 Korea</small>
+            </div>
+            <span class="points">89,760</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         UPCOMING MATCHES
+    ========================== -->
+
+    <section id="matches">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+          <div>
+            <h2>Upcoming Matches</h2>
+            <p>Don't miss the next big battle</p>
+          </div>
+        </div>
+
+        <div class="grid">
+
+          <div class="card match-card reveal">
+            <div>
+              <div class="match-date">OCT 04 • SEMI-FINAL</div>
+              <div class="match-teams">
+                <div>🇮🇳 Ryan Kumar</div>
+                <div>🇯🇵 Kenji Sato</div>
+              </div>
+            </div>
+
+            <div class="match-time">
+              18:30
+              <small>IST</small>
+            </div>
+          </div>
+
+
+          <div class="card match-card reveal">
+            <div>
+              <div class="match-date">OCT 05 • QUARTER-FINAL</div>
+              <div class="match-teams">
+                <div>🇩🇰 Alex Carter</div>
+                <div>🇰🇷 Min-Jun Park</div>
+              </div>
+            </div>
+
+            <div class="match-time">
+              20:00
+              <small>IST</small>
+            </div>
+          </div>
+
+
+          <div class="card match-card reveal">
+            <div>
+              <div class="match-date">OCT 06 • FINAL</div>
+              <div class="match-teams">
+                <div>🇫🇷 Lucas Martin</div>
+                <div>🇮🇳 TBD</div>
+              </div>
+            </div>
+
+            <div class="match-time">
+              19:00
+              <small>IST</small>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         NEWS
+    ========================== -->
+
+    <section id="news">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+          <div>
+            <h2>Latest News</h2>
+            <p>What's happening in badminton</p>
+          </div>
+        </div>
+
+        <div class="grid">
+
+          <article class="card news-card reveal">
+            <div class="news-image">🏆</div>
+            <span class="news-tag">Tournament</span>
+            <h3>Championship reaches the final stage</h3>
+            <p>
+              The competition is heating up as the world's top
+              players battle for the title.
+            </p>
+          </article>
+
+          <article class="card news-card reveal">
+            <div class="news-image">🏸</div>
+            <span class="news-tag">Players</span>
+            <h3>Young stars making their mark</h3>
+            <p>
+              A new generation of badminton players is making
+              headlines this season.
+            </p>
+          </article>
+
+          <article class="card news-card reveal">
+            <div class="news-image">⚡</div>
+            <span class="news-tag">Highlights</span>
+            <h3>Five incredible rallies this week</h3>
+            <p>
+              Check out some of the most exciting rallies from
+              recent matches.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         TOURNAMENTS
+    ========================== -->
+
+    <section id="tournaments">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+          <div>
+            <h2>Tournaments</h2>
+            <p>Major events around the world</p>
+          </div>
+        </div>
+
+        <div class="grid">
+
+          <div class="card tournament-card reveal">
+            <div class="tournament-icon">🏆</div>
+            <h3>World Championship</h3>
+            <p>Global badminton championship.</p>
+            <span class="status">ONGOING</span>
+          </div>
+
+          <div class="card tournament-card reveal">
+            <div class="tournament-icon">🌏</div>
+            <h3>Asia Open</h3>
+            <p>Top Asian players compete for glory.</p>
+            <span class="status">UPCOMING</span>
+          </div>
+
+          <div class="card tournament-card reveal">
+            <div class="tournament-icon">🥇</div>
+            <h3>Super Series Finals</h3>
+            <p>The season-ending badminton event.</p>
+            <span class="status">UPCOMING</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer>
+
+    <div class=
